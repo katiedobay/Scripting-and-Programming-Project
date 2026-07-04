@@ -2,7 +2,7 @@ from sqlalchemy import Column
 from sqlalchemy import Float
 from sqlalchemy import Integer
 from sqlalchemy import create_engine
-
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import declarative_base
 
 
@@ -60,3 +60,35 @@ def create_database():
     Base.metadata.create_all(engine)
 
     return engine
+
+def save_weather_data(engine, weather):
+    """
+    save weather data to the database.
+    """
+
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+    weather_record = WeatherRecord(
+        latitude=weather.latitude,
+        longitude=weather.longitude,
+        month=weather.month,
+        day=weather.day,
+        year=weather.year,
+
+        avg_temperature=weather.avg_temperature,
+        min_temperature=weather.min_temperature,
+        max_temperature=weather.max_temperature,
+
+        avg_wind_speed=weather.avg_wind_speed,
+        min_wind_speed=weather.min_wind_speed,
+        max_wind_speed=weather.max_wind_speed,
+
+        sum_precipitation=weather.sum_precipitation,
+        min_precipitation=weather.min_precipitation,
+        max_precipitation=weather.max_precipitation
+    )
+
+    session.add(weather_record)
+    session.commit()
+    session.close()
