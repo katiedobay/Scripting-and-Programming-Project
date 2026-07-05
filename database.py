@@ -92,3 +92,17 @@ def save_weather_data(engine, weather):
     session.add(weather_record)
     session.commit()
     session.close()
+
+def get_weather_data(engine):
+    """
+    Retrieves the first weather record from the database.
+    """
+
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+    weather_record = session.query(WeatherRecord).first()
+
+    session.close()
+
+    return weather_record
